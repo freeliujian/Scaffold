@@ -15,19 +15,19 @@ importers:
         specifier: ^4.0.0
         version: 4.1.2
       fs-extra:
-        specifier: ^11.2.0
+        specifier: 11.2.0
         version: 11.2.0
       glob:
-        specifier: ^10.3.15
-        version: 10.4.1
+        specifier: 10.3.15
+        version: 10.3.15
       handlebars:
-        specifier: ^4.7.8
+        specifier: 4.7.8
         version: 4.7.8
       prompts:
-        specifier: ^2.4.2
+        specifier: 2.4.2
         version: 2.4.2
       yargs-parser:
-        specifier: ^21.1.1
+        specifier: 21.1.1
         version: 21.1.1
       zx:
         specifier: 8.1.2
@@ -1266,8 +1266,8 @@ packages:
     resolution: {integrity: sha512-wGM28Ehmcnk2NqRORXFOTOR064L4imSw3EeOqU5bIwUf62eXGwg89WivH6VMahL8zlQHeodzvHpXplrqzrz3Nw==}
     engines: {node: '>= 10.13.0'}
 
-  glob@10.4.1:
-    resolution: {integrity: sha512-2jelhlq3E4ho74ZyVLN03oKdAZVUa6UDZzFLVH1H7dnoax+y9qyaq8zBkfDIggjniU19z0wU18y16jMB2eyVIw==}
+  glob@10.3.15:
+    resolution: {integrity: sha512-0c6RlJt1TICLyvJYIApxb8GsXoai0KUP7AxKKAtsYXdgJR1mGEUa7DgwShbdk1nly0PYoZj01xd4hzbq3fsjpw==}
     engines: {node: '>=16 || 14 >=14.18'}
     hasBin: true
 
@@ -1468,8 +1468,8 @@ packages:
     resolution: {integrity: sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==}
     engines: {node: '>=0.10.0'}
 
-  jackspeak@3.1.2:
-    resolution: {integrity: sha512-kWmLKn2tRtfYMF/BakihVVRzBKOxz4gJMiL2Rj91WnAB5TPZumSH99R/Yf1qE1u4uRimvCSJfm6hnxohXeEXjQ==}
+  jackspeak@2.3.6:
+    resolution: {integrity: sha512-N3yCS/NegsOBokc8GAdM8UcmfsKiSS8cipheD/nivzr700H+nsMOxJjQnvwOcRYVuFkdH0wGUvW2WbXGmrZGbQ==}
     engines: {node: '>=14'}
 
   js-tokens@4.0.0:
@@ -3066,7 +3066,7 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       fs-extra: 11.2.0
-      glob: 10.4.1
+      glob: 10.3.15
       handlebars: 4.7.8
       prompts: 2.4.2
       yargs-parser: 21.1.1
@@ -3462,10 +3462,10 @@ snapshots:
       async-done: 2.0.0
       chokidar: 3.6.0
 
-  glob@10.4.1:
+  glob@10.3.15:
     dependencies:
       foreground-child: 3.1.1
-      jackspeak: 3.1.2
+      jackspeak: 2.3.6
       minimatch: 9.0.4
       minipass: 7.1.2
       path-scurry: 1.11.1
@@ -3684,7 +3684,7 @@ snapshots:
 
   isobject@3.0.1: {}
 
-  jackspeak@3.1.2:
+  jackspeak@2.3.6:
     dependencies:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:

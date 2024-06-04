@@ -1,9 +1,8 @@
-
-import zx, { $ } from 'zx';
+import zx, { usePowerShell, useBash, fs, path } from 'zx';
 import HbsBaseGenerator from 'base-handlebars-generator';
-import chalk from 'chalk';
+import os from 'node:os';
 
-const { BaseGenerator } = HbsBaseGenerator;
+const { BaseGenerator, Generator } = HbsBaseGenerator;
 
 
 interface ICreateScaffoldProps {
@@ -14,11 +13,14 @@ class CreateScaffold {
   BaseGenerator: any;
   props: ICreateScaffoldProps;
   zx: typeof zx;
+  Generator: any;
 
   constructor(props: ICreateScaffoldProps) {
     this.props = props;
     this.BaseGenerator = BaseGenerator;
+    this.Generator = Generator;
     this.zx = zx;
+    this.init();
   }
 
   beforeStart = () => {
@@ -26,35 +28,39 @@ class CreateScaffold {
     (beforeStart) && beforeStart();
   };
 
-  init = () => {
+  private init = () => {
+    const os_env = os.type();
+    const rage = /Windows_NT/;
+    if (rage.test(os_env)) {
+      usePowerShell();
+    } else {
+      useBash();
+    }
   };
 
-   zxSpawnSync = async (commandString: string) => {
-    return await $`${commandString}`;
+  checkCurrentVersion = async () => {
+    const { version } = await fs.readJson('./package.json');
+    console.log(version)
   };
 
-  gitEmail = async (email: string, isGlobal: boolean = true) => {
-    const commandString = `git config ${(isGlobal) && '--global'} user.email "${email}"`;
-    return this.setGitConfig(commandString);
-  };
+  getVersion = async () => {
+    try {
+      const baseDir = path.resolve(__dirname, './package.json');
+      const { version } = await fs.readJson(baseDir);
+      console.log(version);
 
-  gitName = async (name: string, isGlobal: boolean = true) => {
-    const commandString = `git config ${(isGlobal) && '--global'} user.name "${name}"`;
-    return await $`${commandString}`;
-  };
-
-  private setGitConfig = async (commandString: string) => {
-    const useZx = () => {
-      return this.zxSpawnSync(`${commandString}`);
-    };
-
-    useZx().then((res) => {
-      console.log(chalk.green(`设置成功 \n ${res}`));
-    }).catch(err => {
-      console.log(chalk.red(`设置失败:\n${err}`));
-    });
+    } catch (error) {
+      console.log(`err: ${error}`);
+    }
   };
 }
+
+const opt = {};
+const BI = new CreateScaffold(opt);
+
+(async () => {
+  BI.getVersion();
+})()
 
 export default CreateScaffold;
 
