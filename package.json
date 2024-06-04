@@ -1,8 +1,13 @@
 {
-  "name": "scaffold",
+  "name": "scaffold-tool",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/es/index.js",
+  "typings": "dist/types/index.d.ts",
+  "engines": {
+    "node": " 20.12.2"
+  },
   "scripts": {
     "build": "gulp"
   },
