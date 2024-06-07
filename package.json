@@ -15,7 +15,7 @@
   "author": "jian.liu",
   "license": "ISC",
   "dependencies": {
-    "base-handlebars-generator": "^1.0.2",
+    "base-handlebars-generator": "^1.0.4",
     "chalk": "^4.0.0",
     "fs-extra": "11.2.0",
     "glob": "10.3.15",

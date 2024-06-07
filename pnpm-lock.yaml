@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       base-handlebars-generator:
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.0.4
+        version: 1.0.4
       chalk:
         specifier: ^4.0.0
         version: 4.1.2
@@ -926,8 +926,8 @@ packages:
   bare-events@2.3.1:
     resolution: {integrity: sha512-sJnSOTVESURZ61XgEleqmP255T6zTYwHPwE4r6SssIh0U9/uDvfpdoJYpVUerJJZH2fueO+CdT8ZT+OC/7aZDA==}
 
-  base-handlebars-generator@1.0.2:
-    resolution: {integrity: sha512-syOa27fdnvA/MVCwNddmw6LkEUsAUDof9J1006K9p59Z44fuJDwoFeXiEI4xDtOE3y4qLeq0TxyfCxMLwchzyw==}
+  base-handlebars-generator@1.0.4:
+    resolution: {integrity: sha512-osFodfq6ysNGtin2cCPqssdKssv1rSumdhWBulSgkN9vmuDAPu2pTKDLklmvd4SIojg5MSvLHbNDfAQhK2g6Zg==}
     engines: {node: ' 20.12.2'}
 
   base64-js@1.5.1:
@@ -3062,7 +3062,7 @@ snapshots:
   bare-events@2.3.1:
     optional: true
 
-  base-handlebars-generator@1.0.2:
+  base-handlebars-generator@1.0.4:
     dependencies:
       chalk: 4.1.2
       fs-extra: 11.2.0
