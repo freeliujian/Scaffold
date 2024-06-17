@@ -1,3 +1,5 @@
-import CreateScaffold from './scaffold';
+import { default as CreateScaffold } from './scaffold';
 
-export default CreateScaffold;
+export { 
+  CreateScaffold,
+};
