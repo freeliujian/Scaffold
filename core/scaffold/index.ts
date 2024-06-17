@@ -1,32 +1,19 @@
-import zx, { usePowerShell, useBash, fs, path } from 'zx';
-import HbsBaseGenerator from 'base-handlebars-generator';
+import { usePowerShell, useBash, $ } from 'zx';
 import os from 'node:os';
-
-const { BaseGenerator, Generator } = HbsBaseGenerator;
-
+import chalk from 'chalk';
 
 interface ICreateScaffoldProps {
-  beforeStart?: any;
-}
+  url: string;
+  installWay?: 'pnpm' | 'npm' | 'yarn';
 
+}
 class CreateScaffold {
-  BaseGenerator: any;
   props: ICreateScaffoldProps;
-  zx: typeof zx;
-  Generator: any;
 
   constructor(props: ICreateScaffoldProps) {
     this.props = props;
-    this.BaseGenerator = BaseGenerator;
-    this.Generator = Generator;
-    this.zx = zx;
     this.init();
   }
-
-  beforeStart = () => {
-    const { beforeStart } = this.props;
-    (beforeStart) && beforeStart();
-  };
 
   private init = () => {
     const os_env = os.type();
@@ -38,28 +25,57 @@ class CreateScaffold {
     }
   };
 
-  checkCurrentVersion = async () => {
-    const { version } = await fs.readJson('./package.json');
-    console.log(version)
+  async gitInit() {
+    try {
+      $`git -v`.then(res => {
+        console.log(chalk.green(res.stdout));
+      })
+      $`git init`.then(res => {
+        console.log(chalk.green(res.stdout));
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  
+  async gitEmail(email: string, isGlobal: boolean = true) {
+    const commandString = await $`git config ${(isGlobal) && '--global'} user.email "${email}"`;
+    console.log(commandString.stdout, chalk.gray('设置成功'));
   };
 
-  getVersion = async () => {
-    try {
-      const baseDir = path.resolve(__dirname, './package.json');
-      const { version } = await fs.readJson(baseDir);
-      console.log(version);
+  async setGitName (name: string, isGlobal: boolean = true): Promise<any>  {
+    const commandString = await $`git config ${(isGlobal) && '--global'} user.name "${name}"`;
+    console.log(commandString.stdout, chalk.gray('设置成功'));
+  };
 
-    } catch (error) {
-      console.log(`err: ${error}`);
+  async gitClone() {
+    const commandString = await $`git clone ${this.props.url}`;
+    console.log(commandString.stdout)
+  };  
+
+  async install () {
+    try {
+      $`pnpm --version`.then(res => {
+        console.log(`version: ${chalk.green(res)}`);
+      });
+      $`pnpm install`.then(res => {
+        console.log(chalk.green(res.stdout));
+      });
+    } catch (err) {
+      console.error('Error during pnpm install:', err);
     }
   };
+
 }
 
-const opt = {};
+const opt = {
+  url: '',
+};
 const BI = new CreateScaffold(opt);
 
 (async () => {
-  BI.getVersion();
+  // BI.gitInit()
+  BI.setGitName('liujian');
 })()
 
 export default CreateScaffold;
