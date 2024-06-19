@@ -26,9 +26,6 @@ importers:
       yargs-parser:
         specifier: 21.1.1
         version: 21.1.1
-      zx:
-        specifier: 8.1.2
-        version: 8.1.2
     devDependencies:
       '@babel/plugin-transform-modules-commonjs':
         specifier: 7.24.1
@@ -2061,11 +2058,6 @@ packages:
   yargs@16.2.0:
     resolution: {integrity: sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==}
     engines: {node: '>=10'}
-
-  zx@8.1.2:
-    resolution: {integrity: sha512-zkCiXKh8D/eo6r58OmJvO5mc2NthcSRvysb3fuS6VQlHPbEPBcxduRwM3m6ZfHj+7cLHcrahCnuO2TDAbW+6xw==}
-    engines: {node: '>= 12.17.0'}
-    hasBin: true
 
 snapshots:
 
@@ -4302,8 +4294,3 @@ snapshots:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 20.2.9
-
-  zx@8.1.2:
-    optionalDependencies:
-      '@types/fs-extra': 11.0.4
-      '@types/node': 20.12.13
