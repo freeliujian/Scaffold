@@ -22,10 +22,12 @@ type TemplateStringArray = TemplateStringsArray;
 class CreateScaffold {
   props: ICreateScaffoldProps;
   basicUserPath: string;
+  cliPath: string;
 
   constructor(props: ICreateScaffoldProps) {
     this.props = props;
     this.basicUserPath = '';
+    this.cliPath = resolve(__dirname, './');
     this.createSATemplates();
   }
 
@@ -78,7 +80,7 @@ class CreateScaffold {
         if (code === 0) {
           resolve({ stdout, stderr });
         } else {
-          reject(new Error(`Command failed with exit code ${code}. Stderr: ${stderr}`));
+          reject(new Error(`💥 Command failed with exit code ${code}. Stderr: ${stderr}`));
         }
       });
     });
@@ -90,7 +92,7 @@ class CreateScaffold {
       const { stderr } = await $`git config ${isGlobal ? '--global' : ''} user.email "${email}"`;
       console.log(stderr, chalk.gray('successful'));
     } catch (error) {
-      console.error('Error:', error);
+      console.error('💥Error:', error);
     }
   }
 
@@ -100,17 +102,17 @@ class CreateScaffold {
       const { stderr } =  await $`git config ${(isGlobal) && '--global'} user.name "${name}"`;
       console.log(stderr, chalk.gray('successful'));
     } catch (error) {
-      console.error('Error:', error);
+      console.error('💥Error:', error);
     }
   }
 
   gitCloneTemplates = async (repoUrl: string,  targetDir?: string) => {
-    const { $, cd, basicUserPath, removeSATemplates } = this;
+    const { $, cd, basicUserPath } = this;
     const targetDirPath = targetDir || basicUserPath;
     try {
       cd(basicUserPath);
       await $`git clone ${repoUrl}`;
-      console.log(chalk.green(`Successfully cloned ${repoUrl} into ${targetDirPath}`));
+      console.log(chalk.green(`🚀 Successfully cloned ${repoUrl} into ${targetDirPath}`));
       // const templatesIndex = readdirSync(targetDirPath);
   
       // console.log(index);
@@ -143,11 +145,9 @@ class CreateScaffold {
         const clonePromises = url.map((item) => gitCloneTemplates(item));
         await Promise.all(clonePromises);
         await this.rmGitFolders();
-        // return this.rmGitFolders();
       } catch (err) {
-        throw new Error('Invalid input. URLs should be an array.');
+        throw new Error('💥Invalid input. URLs should be an array.');
       }
- 
     }
   };
 
@@ -171,7 +171,7 @@ class CreateScaffold {
         }
         rmdirSync(gitDir);
         
-        console.log(chalk.green(`Successfully removed .git directory from ${templateDir}`));
+        console.log(chalk.green(`🔥Successfully removed .git directory from ${templateDir}`));
       }
     }
   };
@@ -201,8 +201,13 @@ class CreateScaffold {
         console.log(chalk.green(res.stdout));
       });
     } catch (err) {
-      console.error('Error during pnpm install:', err);
+      console.error('💥Error during pnpm install:', err);
     }
+  }
+
+  updateRepo = async () => {
+    console.log(this.cliPath);
+
   }
 }
 

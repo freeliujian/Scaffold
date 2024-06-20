@@ -1,6 +1,6 @@
 {
   "name": "scaffold-tool",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
@@ -9,7 +9,8 @@
     "node": " 20.12.2"
   },
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "test": "node ./dist/cjs/scaffold/index.js"
   },
   "keywords": [],
   "author": "jian.liu",
