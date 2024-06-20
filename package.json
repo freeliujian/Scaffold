@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "gulp",
-    "test": "node ./dist/cjs/scaffold/index.js"
+    "test": "node ./example/index.js"
   },
   "keywords": [],
   "author": "jian.liu",
