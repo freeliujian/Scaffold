@@ -1,5 +1,7 @@
 import { default as CreateScaffold } from './scaffold';
 
-export { 
+exports.CreateScaffold = CreateScaffold;
+
+export default { 
   CreateScaffold,
 };
