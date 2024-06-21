@@ -9,7 +9,6 @@ import { globSync } from 'glob';
 import axios, { AxiosStatic } from 'axios';
 
 interface ICreateScaffoldProps {
-  url: string |  string[];
   installWay?: 'pnpm' | 'npm' | 'yarn';
   gitUser: string
 }
@@ -149,9 +148,9 @@ class CreateScaffold {
     }
   }
 
-  getRepoTemplates = async (url?: string | string[]) => {
+  getRepoTemplates = async (url: string | string[] = '') => {
     const { gitCloneTemplates } = this;
-    const repoUrl = url || this.props.url;
+    const repoUrl = url;
     if (typeof repoUrl === 'string') {
       gitCloneTemplates(repoUrl);
     } else {
