@@ -6,10 +6,12 @@ import { spawn } from 'child_process';
 import chalk from 'chalk';
 import { join } from 'path';
 import { globSync } from 'glob';
+import axios, { AxiosStatic } from 'axios';
 
 interface ICreateScaffoldProps {
-  url?: string;
+  url: string |  string[];
   installWay?: 'pnpm' | 'npm' | 'yarn';
+  gitUser: string
 }
 
 type ExecResult = {
@@ -19,16 +21,27 @@ type ExecResult = {
 
 type TemplateStringArray = TemplateStringsArray;
 
+
+function noop() {
+  return true;
+}
+
 class CreateScaffold {
   props: ICreateScaffoldProps;
   basicUserPath: string;
   cliPath: string;
+  axios: AxiosStatic;
+  allTheRepoMessage: any[];
+  user: string;
 
   constructor(props: ICreateScaffoldProps) {
     this.props = props;
     this.basicUserPath = '';
     this.cliPath = resolve(__dirname, './');
     this.createSATemplates();
+    this.axios = axios;
+    this.allTheRepoMessage = [];
+    this.user = this.props.gitUser;
   }
 
   cd = (dir: string) => {
@@ -136,13 +149,14 @@ class CreateScaffold {
     }
   }
 
-  getRepoTemplates = async (url: string | string[]) => {
+  getRepoTemplates = async (url?: string | string[]) => {
     const { gitCloneTemplates } = this;
-    if (typeof url === 'string') {
-      gitCloneTemplates(url);
+    const repoUrl = url || this.props.url;
+    if (typeof repoUrl === 'string') {
+      gitCloneTemplates(repoUrl);
     } else {
       try {
-        const clonePromises = url.map((item) => gitCloneTemplates(item));
+        const clonePromises = repoUrl.map((item) => gitCloneTemplates(item));
         await Promise.all(clonePromises);
         await this.rmGitFolders();
       } catch (err) {
@@ -207,7 +221,21 @@ class CreateScaffold {
 
   updateRepo = async () => {
     console.log(this.cliPath);
+  }
 
+  getUserRepoList = async (filter:((item:any) => boolean) = noop): Promise<any> => {
+    this.allTheRepoMessage = (await this.axios.get(`https://api.github.com/users/${this.user}/repos`)).data;
+    const meta = this.allTheRepoMessage
+      .filter(item => !item.fork)
+      .filter(filter) 
+      .map(item => {
+      return {
+        name: item.name,
+        desc: item.description,
+        url: item.clone_url,
+      }
+    })
+    return meta;
   }
 }
 
