@@ -1,6 +1,6 @@
 import os from 'node:os';
 import { resolve } from 'node:path';
-import { existsSync, mkdirpSync, readdirSync, rmdirSync, statSync, unlinkSync } from 'fs-extra';
+import { existsSync, mkdirpSync, readdirSync, rmdirSync, statSync, unlinkSync, writeFileSync, accessSync, constants, readFileSync } from 'fs-extra';
 import { chdir } from 'process';
 import { spawn } from 'child_process';
 import chalk from 'chalk';
@@ -37,22 +37,45 @@ class CreateScaffold {
     this.props = props;
     this.basicUserPath = '';
     this.cliPath = resolve(__dirname, './');
+    this.user = this.props.gitUser;
     this.createSATemplates();
+    this.setGitUser();
     this.axios = axios;
     this.allTheRepoMessage = [];
-    this.user = this.props.gitUser;
   }
 
   cd = (dir: string) => {
     chdir(dir);
   }
 
+  setGitUser = async () => {
+    try {
+      const configFileName = '.config.json';
+      const configFileNamePath = resolve(this.SADir(), `./${configFileName}`);
+      let configData: any = {};
+
+      try {
+        accessSync(configFileNamePath, constants.R_OK | constants.W_OK);
+        const existingConfig = readFileSync(configFileNamePath, 'utf-8');
+        configData = JSON.parse(existingConfig);
+      } catch (err) {
+        console.error('No access to config file or it does not exist, creating a new one.');
+      }
+
+      configData['gitUser'] = this.user;
+      writeFileSync(configFileNamePath, JSON.stringify(configData, null, 2));
+      console.log(chalk.green(`Successfully updated ${configFileName} with git user ${this.user}`));
+    } catch (err) {
+      throw err;
+    }
+   
+  }
+
   createSATemplates = async () => {
-    const userRootDir = os.homedir();
-    const SADir = resolve(userRootDir, '.sa/.templates');
-    this.basicUserPath = SADir;
-    if (!existsSync(SADir)) {
-        mkdirpSync(SADir);
+    const SATemplatesDir = resolve(this.SADir(), './.templates');
+    this.basicUserPath = SATemplatesDir;
+    if (!existsSync(SATemplatesDir)) {
+        mkdirpSync(SATemplatesDir);
     }
   }
 
@@ -226,6 +249,10 @@ class CreateScaffold {
     this.allTheRepoMessage = (await this.axios.get(`https://api.github.com/users/${this.user}/repos`)).data;
     const meta = this.allTheRepoMessage
       .filter(item => !item.fork)
+      .filter(item => {
+        const regex = /-sa$/;
+        return regex.test(item.name);
+      })
       .filter(filter) 
       .map(item => {
       return {
@@ -236,6 +263,12 @@ class CreateScaffold {
     })
     return meta;
   }
+
+  SADir = () => {
+    const userRootDir = os.homedir();
+    return resolve(userRootDir, '.sa')
+  };
+
 }
 
 
