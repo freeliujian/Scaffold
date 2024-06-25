@@ -1,25 +1,16 @@
 import os from 'node:os';
 import { resolve } from 'node:path';
 import { existsSync, mkdirpSync, readdirSync, rmdirSync, statSync, unlinkSync, writeFileSync, accessSync, constants, readFileSync } from 'fs-extra';
-import { chdir } from 'process';
-import { spawn } from 'child_process';
 import chalk from 'chalk';
 import { join } from 'path';
 import { globSync } from 'glob';
 import axios, { AxiosStatic } from 'axios';
+import { $, cd } from './until';
 
 interface ICreateScaffoldProps {
   installWay?: 'pnpm' | 'npm' | 'yarn';
   gitUser: string
 }
-
-type ExecResult = {
-  stdout: string;
-  stderr: string;
-};
-
-type TemplateStringArray = TemplateStringsArray;
-
 
 function noop() {
   return true;
@@ -42,10 +33,6 @@ class CreateScaffold {
     this.setGitUser();
     this.axios = axios;
     this.allTheRepoMessage = [];
-  }
-
-  cd = (dir: string) => {
-    chdir(dir);
   }
 
   setGitUser = async () => {
@@ -80,7 +67,7 @@ class CreateScaffold {
   }
 
   removeSATemplates = async (slient: boolean = false) => {
-    const { $, basicUserPath } = this;
+    const { basicUserPath } = this;
     if (existsSync(basicUserPath)) {
       const { stderr, stdout } = await $`rm -rf ${this.basicUserPath}`;
       console.log(stderr, 'stderr');
@@ -91,38 +78,7 @@ class CreateScaffold {
     }
   }
 
-  $ = async (pieces: TemplateStringArray, ...args: any[]): Promise<ExecResult> => {
-    const command = pieces.reduce((acc, piece, i) => acc + piece + (args[i] || ''), '');
-
-    return new Promise((resolve, reject) => {
-      const child = spawn(command, {
-        stdio: ['pipe', 'pipe', 'pipe'],
-        shell: true,
-      });
-
-      let stdout = '';
-      let stderr = '';
-
-      child.stdout.on('data', (data) => {
-        stdout += data;
-      });
-
-      child.stderr.on('data', (data) => {
-        stderr += data;
-      });
-
-      child.on('close', (code) => {
-        if (code === 0) {
-          resolve({ stdout, stderr });
-        } else {
-          reject(new Error(`💥 Command failed with exit code ${code}. Stderr: ${stderr}`));
-        }
-      });
-    });
-  }
-
   gitEmail = async (email: string, isGlobal: boolean = true) => {
-    const { $ } = this;
     try {
       const { stderr } = await $`git config ${isGlobal ? '--global' : ''} user.email "${email}"`;
       console.log(stderr, chalk.gray('successful'));
@@ -132,7 +88,6 @@ class CreateScaffold {
   }
 
   setGitName = async (name: string, isGlobal: boolean = true) => {
-    const { $ } = this;
     try {
       const { stderr } =  await $`git config ${(isGlobal) && '--global'} user.name "${name}"`;
       console.log(stderr, chalk.gray('successful'));
@@ -142,7 +97,7 @@ class CreateScaffold {
   }
 
   gitCloneTemplates = async (repoUrl: string,  targetDir?: string) => {
-    const { $, cd, basicUserPath } = this;
+    const { basicUserPath } = this;
     const targetDirPath = targetDir || basicUserPath;
     try {
       cd(basicUserPath);
@@ -227,7 +182,6 @@ class CreateScaffold {
   }
 
   install = async () => {
-    const { $ } = this;
     try {
       $`pnpm --version`.then(res => {
         console.log(res);
