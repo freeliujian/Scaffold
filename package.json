@@ -1,6 +1,6 @@
 {
   "name": "scaffold-tool",
-  "version": "1.0.8",
+  "version": "1.0.81",
   "description": "",
   "main": "dist/cjs/index.js",
   "module": "dist/es/index.js",
