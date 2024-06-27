@@ -30,16 +30,15 @@ class CreateScaffold {
   basicUserPath: string;
   cliPath: string;
   axios: AxiosStatic;
-  allTheRepoMessage: any[];
   user: string;
 
   constructor(props: ICreateScaffoldProps) {
     this.props = props;
-    this.basicUserPath = "";
-    this.cliPath = resolve(__dirname, "./");
+    this.basicUserPath = '';
+    this.cliPath = resolve(__dirname, './');
     this.user = this.props.gitUser;
+    this.init();
     this.axios = axios;
-    this.allTheRepoMessage = [];
   }
 
   async init() {
@@ -64,6 +63,7 @@ class CreateScaffold {
   }
 
   async getRepoTemplates(url: string | string[]) {
+
     await getRepoTemplates(url, this.basicUserPath);
   }
 
