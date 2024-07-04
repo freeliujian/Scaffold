@@ -18,18 +18,18 @@ import chalk from "chalk";
 import { join } from "path";
 import { globSync } from "glob";
 import axios from "axios";
+import { CACHE_CONFIG_NAME, CACHE_TEMPLATE_NAME, DEFAULT_END_NAME, RAGEX_END_REPO } from "./constants";
 
 // 获取用户的.sad目录路径
 export const getSADir = (): string => {
   const userRootDir = os.homedir();
-  return resolve(userRootDir, ".sa");
+  return resolve(userRootDir, `${DEFAULT_END_NAME}`);
 };
 
 // 设置Git用户
 export const setGitUser = async (user: string): Promise<void> => {
   try {
-    const configFileName = ".config.json";
-    const configFileNamePath = resolve(getSADir(), `./${configFileName}`);
+    const configFileNamePath = resolve(getSADir(), `./${CACHE_CONFIG_NAME}`);
     let configData: any = {};
 
     try {
@@ -46,7 +46,7 @@ export const setGitUser = async (user: string): Promise<void> => {
     writeFileSync(configFileNamePath, JSON.stringify(configData, null, 2));
     console.log(
       chalk.green(
-        `Successfully updated ${configFileName} with git user ${user}`
+        `Successfully updated ${CACHE_CONFIG_NAME} with git user ${user}`
       )
     );
   } catch (err) {
@@ -56,7 +56,7 @@ export const setGitUser = async (user: string): Promise<void> => {
 
 // 创建SA模板目录
 export const createSATemplates = async (): Promise<string> => {
-  const SATemplatesDir = resolve(getSADir(), "./.templates");
+  const SATemplatesDir = resolve(getSADir(), `./${CACHE_TEMPLATE_NAME}`);
   if (!existsSync(SATemplatesDir)) {
     mkdirpSync(SATemplatesDir);
   }
@@ -222,8 +222,7 @@ export const getUserRepoList = async (
   const meta = allTheRepoMessage
     .filter((item: any) => !item.fork)
     .filter((item: any) => {
-      const regex = /-sa$/;
-      return regex.test(item.name);
+      return RAGEX_END_REPO.test(item.name);
     })
     .filter(filter)
     .map((item: any) => {
